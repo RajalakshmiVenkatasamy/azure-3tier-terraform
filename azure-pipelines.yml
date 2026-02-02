@@ -2,36 +2,19 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  terraformVersion: '1.6.6'
+  vmImage: ubuntu-latest
 
 steps:
 - checkout: self
 
-- task: TerraformInstaller@1
-  displayName: Install Terraform
+- task: AzureCLI@2
+  displayName: Terraform Init & Plan
   inputs:
-    terraformVersion: $(terraformVersion)
-
-- task: TerraformTaskV4@4
-  displayName: Terraform Init
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    backendType: 'local'
-    environmentServiceNameAzureRM: 'azurerm-terraform-sc'
-
-- task: TerraformTaskV4@4
-  displayName: Terraform Validate
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-
-- task: TerraformTaskV4@4
-  displayName: Terraform Plan
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    environmentServiceNameAzureRM: 'azurerm-terraform-sc'
+    azureSubscription: azurerm-terraform-sc   # your service connection
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      terraform --version
+      terraform init
+      terraform validate
+      terraform plan
