@@ -7,10 +7,17 @@ pool:
 steps:
 - checkout: self
 
+# 🔹 Step 1: Install Terraform
+- task: TerraformInstaller@1
+  displayName: Install Terraform
+  inputs:
+    terraformVersion: '1.6.6'
+
+# 🔹 Step 2: Run Terraform using Azure CLI
 - task: AzureCLI@2
   displayName: Terraform Init & Plan
   inputs:
-    azureSubscription: azurerm-terraform-sc   # your service connection
+    azureSubscription: azurerm-terraform-sc
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
